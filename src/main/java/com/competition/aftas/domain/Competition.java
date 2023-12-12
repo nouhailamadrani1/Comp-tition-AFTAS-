@@ -12,7 +12,8 @@ public class Competition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private double code;
+    @Column(name = "code")
+    private Long code;
 
     private Date date;
     private LocalTime startTime;
@@ -21,14 +22,12 @@ public class Competition {
     private String location;
     private Double amount;
 
-    @OneToMany(mappedBy = "competition")
-    private Set<Hunting> huntings;
 
-    public double getCode() {
+    public Long getCode() {
         return code;
     }
 
-    public void setCode(double code) {
+    public void setCode(Long code) {
         this.code = code;
     }
 
@@ -80,11 +79,5 @@ public class Competition {
         this.amount = amount;
     }
 
-    public Set<Hunting> getHuntings() {
-        return huntings;
-    }
 
-    public void setHuntings(Set<Hunting> huntings) {
-        this.huntings = huntings;
-    }
 }

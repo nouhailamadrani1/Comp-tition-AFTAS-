@@ -17,8 +17,6 @@ public class Member {
     private String nationality;
     private IdentityDocumentType identityDocument;
     private String identityNumber;
-    @OneToMany(mappedBy = "member")
-    private Set<Hunting> huntings;
 
 
     public Integer getNum() {
@@ -77,11 +75,5 @@ public class Member {
         this.identityNumber = identityNumber;
     }
 
-    public Set<Hunting> getHuntings() {
-        return huntings;
-    }
 
-    public void setHuntings(Set<Hunting> huntings) {
-        this.huntings = huntings;
-    }
 }
