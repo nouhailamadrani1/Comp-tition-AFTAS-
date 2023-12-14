@@ -1,6 +1,6 @@
 package com.competition.aftas.controller;
 
-import com.competition.aftas.domain.Hunting;
+import com.competition.aftas.DTO.HuntingDTO;
 import com.competition.aftas.service.HuntingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,43 +13,40 @@ import java.util.List;
 @RequestMapping("/huntings")
 public class HuntingController {
 
+    private final HuntingService huntingService;
+
     @Autowired
-    private HuntingService huntingService;
+    public HuntingController(HuntingService huntingService) {
+        this.huntingService = huntingService;
+    }
 
     @PostMapping
-    public ResponseEntity<Hunting> saveHunting(@RequestBody Hunting hunting) {
-        Hunting savedHunting = huntingService.saveHunting(hunting);
-        return new ResponseEntity<>(savedHunting, HttpStatus.CREATED);
+    public ResponseEntity<HuntingDTO> saveHunting(@RequestBody HuntingDTO huntingDTO) {
+        HuntingDTO createdHunting = huntingService.saveHunting(huntingDTO);
+        return new ResponseEntity<>(createdHunting, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Hunting> getHuntingById(@PathVariable Integer id) {
-        Hunting hunting = huntingService.getHuntingById(id);
-        if (hunting != null) {
-            return new ResponseEntity<>(hunting, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HuntingDTO> getHuntingById(@PathVariable Integer id) {
+        HuntingDTO huntingDTO = huntingService.getHuntingById(id);
+        return ResponseEntity.ok(huntingDTO);
     }
 
     @GetMapping
-    public List<Hunting> getAllHuntings() {
-        return huntingService.getAllHuntings();
+    public ResponseEntity<List<HuntingDTO>> getAllHuntings() {
+        List<HuntingDTO> huntingList = huntingService.getAllHuntings();
+        return ResponseEntity.ok(huntingList);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Hunting> updateHunting(@PathVariable Integer id, @RequestBody Hunting updatedHunting) {
-        Hunting hunting = huntingService.updateHunting(id, updatedHunting);
-        if (hunting != null) {
-            return new ResponseEntity<>(hunting, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HuntingDTO> updateHunting(@PathVariable Integer id, @RequestBody HuntingDTO updatedHuntingDTO) {
+        HuntingDTO updatedHunting = huntingService.updateHunting(id, updatedHuntingDTO);
+        return ResponseEntity.ok(updatedHunting);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteHunting(@PathVariable Integer id) {
         huntingService.deleteHunting(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

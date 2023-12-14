@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -20,8 +21,8 @@ public class FishController {
     }
 
     @PostMapping
-    public ResponseEntity<FishDTO> createFish(@RequestBody FishDTO fishDTO) {
-        FishDTO createdFish = fishService.createFish(fishDTO);
+    public ResponseEntity<FishDTO> saveFish(@RequestBody FishDTO fishDTO) {
+        FishDTO createdFish = fishService.saveFish(fishDTO);
         return new ResponseEntity<>(createdFish, HttpStatus.CREATED);
     }
 
@@ -38,8 +39,8 @@ public class FishController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FishDTO> updateFish(@PathVariable Integer id, @RequestBody FishDTO fishDTO) {
-        FishDTO updatedFish = fishService.updateFish(id, fishDTO);
+    public ResponseEntity<FishDTO> updateFish(@PathVariable Integer id, @RequestBody FishDTO updatedFishDTO) {
+        FishDTO updatedFish = fishService.updateFish(id, updatedFishDTO);
         return ResponseEntity.ok(updatedFish);
     }
 
