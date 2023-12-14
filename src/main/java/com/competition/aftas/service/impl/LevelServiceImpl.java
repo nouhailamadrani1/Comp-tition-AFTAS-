@@ -1,50 +1,71 @@
 package com.competition.aftas.service.impl;
 
+import com.competition.aftas.DTO.LevelDTO;
 import com.competition.aftas.domain.Level;
 import com.competition.aftas.repository.LevelRepository;
 import com.competition.aftas.service.LevelService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LevelServiceImpl implements LevelService {
 
+    private final LevelRepository levelRepository;
+
     @Autowired
-    private LevelRepository levelRepository;
-
-    @Override
-    public Level saveLevel(Level level) {
-        return levelRepository.save(level);
+    public LevelServiceImpl(LevelRepository levelRepository) {
+        this.levelRepository = levelRepository;
     }
 
     @Override
-    public Level getLevelById(Integer code) {
-        Optional<Level> optionalLevel = levelRepository.findById(code);
-        return optionalLevel.orElse(null);
+    public LevelDTO createLevel(LevelDTO levelDTO) {
+        Level level = new Level();
+        BeanUtils.copyProperties(levelDTO, level);
+        levelRepository.save(level);
+        return levelDTO;
     }
 
     @Override
-    public List<Level> getAllLevels() {
-        return levelRepository.findAll();
+    public LevelDTO getLevelById(Integer id) {
+        Level level = levelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Level not found with id: " + id));
+
+        LevelDTO levelDTO = new LevelDTO();
+        BeanUtils.copyProperties(level, levelDTO);
+        return levelDTO;
     }
 
     @Override
-    public Level updateLevel(Integer code, Level updatedLevel) {
-        Optional<Level> optionalLevel = levelRepository.findById(code);
-        if (optionalLevel.isPresent()) {
-            Level existingLevel = optionalLevel.get();
-            existingLevel.setDescription(updatedLevel.getDescription());
-            existingLevel.setPoints(updatedLevel.getPoints());
-            return levelRepository.save(existingLevel);
-        }
-        return null;
+    public List<LevelDTO> getAllLevels() {
+        List<Level> levels = levelRepository.findAll();
+        return levels.stream()
+                .map(this::convertEntityToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteLevel(Integer code) {
-        levelRepository.deleteById(code);
+    public LevelDTO updateLevel(Integer id, LevelDTO levelDTO) {
+        Level existingLevel = levelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Level not found with id: " + id));
+
+        BeanUtils.copyProperties(levelDTO, existingLevel);
+        existingLevel = levelRepository.save(existingLevel);
+
+        BeanUtils.copyProperties(existingLevel, levelDTO);
+        return levelDTO;
+    }
+
+    @Override
+    public void deleteLevel(Integer id) {
+        levelRepository.deleteById(id);
+    }
+
+    private LevelDTO convertEntityToDTO(Level level) {
+        LevelDTO levelDTO = new LevelDTO();
+        BeanUtils.copyProperties(level, levelDTO);
+        return levelDTO;
     }
 }

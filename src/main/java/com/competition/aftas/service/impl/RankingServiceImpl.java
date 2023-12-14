@@ -1,51 +1,48 @@
 package com.competition.aftas.service.impl;
 
+import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.domain.Ranking;
 import com.competition.aftas.repository.RankingRepository;
 import com.competition.aftas.service.RankingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.beans.BeanUtils;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.stereotype.Service;
+        import java.util.List;
+        import java.util.stream.Collectors;
 
 @Service
 public class RankingServiceImpl implements RankingService {
 
+    private final RankingRepository rankingRepository;
+
     @Autowired
-    private RankingRepository rankingRepository;
-
-    @Override
-    public Ranking saveRanking(Ranking ranking) {
-        return rankingRepository.save(ranking);
+    public RankingServiceImpl(RankingRepository rankingRepository) {
+        this.rankingRepository = rankingRepository;
     }
 
     @Override
-    public Ranking getRankingById(Integer id) {
-        Optional<Ranking> optionalRanking = rankingRepository.findById(id);
-        return optionalRanking.orElse(null);
+    public RankingDTO createRanking(RankingDTO rankingDTO) {
+        Ranking ranking = new Ranking();
+        BeanUtils.copyProperties(rankingDTO, ranking);
+        rankingRepository.save(ranking);
+        return rankingDTO;
     }
 
     @Override
-    public List<Ranking> getAllRankings() {
-        return rankingRepository.findAll();
+    public List<RankingDTO> getRankingsByCompetition(Long competitionId) {
+        List<Ranking> rankings = rankingRepository.findByIdCompetitionId(competitionId);
+        return rankings.stream()
+                .map(this::convertEntityToDTO)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public Ranking updateRanking(Integer id, Ranking updatedRanking) {
-        Optional<Ranking> optionalRanking = rankingRepository.findById(id);
-        if (optionalRanking.isPresent()) {
-            Ranking existingRanking = optionalRanking.get();
-            existingRanking.setRank(updatedRanking.getRank());
-            existingRanking.setScore(updatedRanking.getScore());
+    // Other methods as needed
 
-            return rankingRepository.save(existingRanking);
-        }
-        return null;
-    }
-
-    @Override
-    public void deleteRanking(Integer id) {
-        rankingRepository.deleteById(id);
+    private RankingDTO convertEntityToDTO(Ranking ranking) {
+        RankingDTO rankingDTO = new RankingDTO();
+        BeanUtils.copyProperties(ranking, rankingDTO);
+        rankingDTO.setMemberId(Long.valueOf(ranking.getId().getMember().getNum()));
+        rankingDTO.setCompetitionId(ranking.getId().getCompetition().getId());
+        return rankingDTO;
     }
 }

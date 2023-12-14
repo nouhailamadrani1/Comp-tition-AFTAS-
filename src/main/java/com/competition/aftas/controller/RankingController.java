@@ -1,41 +1,35 @@
 package com.competition.aftas.controller;
 
-import com.competition.aftas.domain.Ranking;
+import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.service.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/rankings")
 public class RankingController {
 
+    private final RankingService rankingService;
+
     @Autowired
-    private RankingService rankingService;
+    public RankingController(RankingService rankingService) {
+        this.rankingService = rankingService;
+    }
 
     @PostMapping
-    public Ranking saveRanking(@RequestBody Ranking ranking) {
-        return rankingService.saveRanking(ranking);
+    public ResponseEntity<RankingDTO> createRanking(@RequestBody RankingDTO rankingDTO) {
+        RankingDTO createdRanking = rankingService.createRanking(rankingDTO);
+        return new ResponseEntity<>(createdRanking, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public Ranking getRankingById(@PathVariable Integer id) {
-        return rankingService.getRankingById(id);
+    @GetMapping("/competition/{competitionId}")
+    public ResponseEntity<List<RankingDTO>> getRankingsByCompetition(@PathVariable Long competitionId) {
+        List<RankingDTO> rankings = rankingService.getRankingsByCompetition(competitionId);
+        return ResponseEntity.ok(rankings);
     }
 
-    @GetMapping
-    public List<Ranking> getAllRankings() {
-        return rankingService.getAllRankings();
-    }
 
-    @PutMapping("/{id}")
-    public Ranking updateRanking(@PathVariable Integer id, @RequestBody Ranking updatedRanking) {
-        return rankingService.updateRanking(id, updatedRanking);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteRanking(@PathVariable Integer id) {
-        rankingService.deleteRanking(id);
-    }
 }

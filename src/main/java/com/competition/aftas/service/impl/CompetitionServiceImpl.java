@@ -1,54 +1,72 @@
 package com.competition.aftas.service.impl;
 
+import com.competition.aftas.DTO.CompetitionDTO;
 import com.competition.aftas.domain.Competition;
 import com.competition.aftas.repository.CompetitionRepository;
 import com.competition.aftas.service.CompetitionService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
 
+    private final CompetitionRepository competitionRepository;
+
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Override
-    public Competition saveCompetition(Competition competition) {
-        return competitionRepository.save(competition);
+    public CompetitionServiceImpl(CompetitionRepository competitionRepository) {
+        this.competitionRepository = competitionRepository;
     }
 
     @Override
-    public Competition getCompetitionByCode(Long code) {
-        Optional<Competition> optionalCompetition = competitionRepository.findByCode(code);
-        return optionalCompetition.orElse(null);
+    public CompetitionDTO createCompetition(CompetitionDTO competitionDTO) {
+        Competition competition = new Competition();
+        BeanUtils.copyProperties(competitionDTO, competition);
+        competition = competitionRepository.save(competition);
+        BeanUtils.copyProperties(competition, competitionDTO);
+        return competitionDTO;
     }
 
     @Override
-    public List<Competition> getAllCompetitions() {
-        return competitionRepository.findAll();
+    public CompetitionDTO getCompetitionById(Long id) {
+        Competition competition = competitionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Competition not found with id: " + id));
+
+        CompetitionDTO competitionDTO = new CompetitionDTO();
+        BeanUtils.copyProperties(competition, competitionDTO);
+        return competitionDTO;
     }
 
     @Override
-    public Competition updateCompetition(Long code, Competition updatedCompetition) {
-        Optional<Competition> optionalCompetition = competitionRepository.findByCode(code);
-        if (optionalCompetition.isPresent()) {
-            Competition existingCompetition = optionalCompetition.get();
-            existingCompetition.setDate(updatedCompetition.getDate());
-            existingCompetition.setStartTime(updatedCompetition.getStartTime());
-            existingCompetition.setEndTime(updatedCompetition.getEndTime());
-            existingCompetition.setNumberOfParticipants(updatedCompetition.getNumberOfParticipants());
-            existingCompetition.setLocation(updatedCompetition.getLocation());
-            existingCompetition.setAmount(updatedCompetition.getAmount());
-            return competitionRepository.save(existingCompetition);
-        }
-        return null;
+    public List<CompetitionDTO> getAllCompetitions() {
+        List<Competition> competitions = competitionRepository.findAll();
+        return competitions.stream()
+                .map(this::convertEntityToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteCompetition(Long code) {
-        competitionRepository.deleteByCode(code);
+    public CompetitionDTO updateCompetition(Long id, CompetitionDTO competitionDTO) {
+        Competition existingCompetition = competitionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Competition not found with id: " + id));
+
+        BeanUtils.copyProperties(competitionDTO, existingCompetition);
+        existingCompetition = competitionRepository.save(existingCompetition);
+
+        BeanUtils.copyProperties(existingCompetition, competitionDTO);
+        return competitionDTO;
+    }
+
+    @Override
+    public void deleteCompetition(Long id) {
+        competitionRepository.deleteById(id);
+    }
+
+    private CompetitionDTO convertEntityToDTO(Competition competition) {
+        CompetitionDTO competitionDTO = new CompetitionDTO();
+        BeanUtils.copyProperties(competition, competitionDTO);
+        return competitionDTO;
     }
 }

@@ -1,13 +1,14 @@
 package com.competition.aftas.service;
 
+import com.competition.aftas.DTO.LevelDTO;
 import com.competition.aftas.domain.Level;
 
 import java.util.List;
 
 public interface LevelService {
-    Level saveLevel(Level level);
-    Level getLevelById(Integer code);
-    List<Level> getAllLevels();
-    Level updateLevel(Integer code, Level updatedLevel);
-    void deleteLevel(Integer code);
+    LevelDTO createLevel(LevelDTO levelDTO);
+    LevelDTO getLevelById(Integer id);
+    List<LevelDTO> getAllLevels();
+    LevelDTO updateLevel(Integer id, LevelDTO levelDTO);
+    void deleteLevel(Integer id);
 }

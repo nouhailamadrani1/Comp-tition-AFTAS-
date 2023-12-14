@@ -5,46 +5,18 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 @Entity
 public class Fish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
     private double averageWeight;
+
     @ManyToOne
-    @JoinColumn(name = "level_code")
+    @JoinColumn(name = "level_id")
     private Level level;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getAverageWeight() {
-        return averageWeight;
-    }
-
-    public void setAverageWeight(double averageWeight) {
-        this.averageWeight = averageWeight;
-    }
-
-    public Level getLevel() {
-        return level;
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
-    }
 }

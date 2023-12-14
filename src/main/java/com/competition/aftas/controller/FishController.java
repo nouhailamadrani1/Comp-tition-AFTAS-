@@ -1,41 +1,51 @@
 package com.competition.aftas.controller;
 
-import com.competition.aftas.domain.Fish;
+import com.competition.aftas.DTO.FishDTO;
 import com.competition.aftas.service.FishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/fish")
 public class FishController {
 
+    private final FishService fishService;
+
     @Autowired
-    private FishService fishService;
+    public FishController(FishService fishService) {
+        this.fishService = fishService;
+    }
 
     @PostMapping
-    public Fish saveFish(@RequestBody Fish fish) {
-        return fishService.saveFish(fish);
+    public ResponseEntity<FishDTO> createFish(@RequestBody FishDTO fishDTO) {
+        FishDTO createdFish = fishService.createFish(fishDTO);
+        return new ResponseEntity<>(createdFish, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public Fish getFishById(@PathVariable Integer id) {
-        return fishService.getFishById(id);
+    public ResponseEntity<FishDTO> getFishById(@PathVariable Integer id) {
+        FishDTO fishDTO = fishService.getFishById(id);
+        return ResponseEntity.ok(fishDTO);
     }
 
     @GetMapping
-    public List<Fish> getAllFish() {
-        return fishService.getAllFish();
+    public ResponseEntity<List<FishDTO>> getAllFish() {
+        List<FishDTO> fishList = fishService.getAllFish();
+        return ResponseEntity.ok(fishList);
     }
 
     @PutMapping("/{id}")
-    public Fish updateFish(@PathVariable Integer id, @RequestBody Fish updatedFish) {
-        return fishService.updateFish(id, updatedFish);
+    public ResponseEntity<FishDTO> updateFish(@PathVariable Integer id, @RequestBody FishDTO fishDTO) {
+        FishDTO updatedFish = fishService.updateFish(id, fishDTO);
+        return ResponseEntity.ok(updatedFish);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFish(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteFish(@PathVariable Integer id) {
         fishService.deleteFish(id);
+        return ResponseEntity.noContent().build();
     }
 }

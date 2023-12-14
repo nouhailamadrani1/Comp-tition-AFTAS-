@@ -1,13 +1,13 @@
 package com.competition.aftas.service;
 
-import com.competition.aftas.domain.Competition;
+import com.competition.aftas.DTO.CompetitionDTO;
 
 import java.util.List;
 
 public interface CompetitionService {
-    Competition saveCompetition(Competition competition);
-    Competition getCompetitionByCode(Long code);
-    List<Competition> getAllCompetitions();
-    Competition updateCompetition(Long code, Competition updatedCompetition);
-    void deleteCompetition(Long code);
+    CompetitionDTO createCompetition(CompetitionDTO competitionDTO);
+    CompetitionDTO getCompetitionById(Long id);
+    List<CompetitionDTO> getAllCompetitions();
+    CompetitionDTO updateCompetition(Long id, CompetitionDTO competitionDTO);
+    void deleteCompetition(Long id);
 }

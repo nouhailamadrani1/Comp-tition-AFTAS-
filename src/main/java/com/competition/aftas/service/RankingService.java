@@ -1,13 +1,13 @@
 package com.competition.aftas.service;
 
+import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.domain.Ranking;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RankingService {
-    Ranking saveRanking(Ranking ranking);
-    Ranking getRankingById(Integer id);
-    List<Ranking> getAllRankings();
-    Ranking updateRanking(Integer id, Ranking updatedRanking);
-    void deleteRanking(Integer id);
+    RankingDTO createRanking(RankingDTO rankingDTO);
+    List<RankingDTO> getRankingsByCompetition(Long competitionId);
+    // Other methods as needed
 }
