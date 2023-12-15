@@ -1,7 +1,9 @@
 package com.competition.aftas.service.impl;
 
+import com.competition.aftas.DTO.LevelDTO;
 import com.competition.aftas.domain.Fish;
 import com.competition.aftas.DTO.FishDTO;
+import com.competition.aftas.domain.Level;
 import com.competition.aftas.repository.FishRepository;
 import com.competition.aftas.service.FishService;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +24,15 @@ public class FishServiceImpl implements FishService {
     public FishDTO saveFish(FishDTO fishDTO) {
         Fish fish = new Fish();
         BeanUtils.copyProperties(fishDTO, fish);
+
+        // Map LevelDTO to Level
+        LevelDTO levelDTO = fishDTO.getLevel();
+        if (levelDTO != null) {
+            Level level = new Level();
+            BeanUtils.copyProperties(levelDTO, level);
+            fish.setLevel(level);
+        }
+
         Fish savedFish = fishRepository.save(fish);
         BeanUtils.copyProperties(savedFish, fishDTO);
         return fishDTO;
@@ -62,6 +73,14 @@ public class FishServiceImpl implements FishService {
     private FishDTO convertEntityToDTO(Fish fish) {
         FishDTO fishDTO = new FishDTO();
         BeanUtils.copyProperties(fish, fishDTO);
+
+        // If the 'level' property is not null, map it to the LevelDTO
+        if (fish.getLevel() != null) {
+            LevelDTO levelDTO = new LevelDTO();
+            BeanUtils.copyProperties(fish.getLevel(), levelDTO);
+            fishDTO.setLevel(levelDTO);
+        }
+
         return fishDTO;
     }
 }
