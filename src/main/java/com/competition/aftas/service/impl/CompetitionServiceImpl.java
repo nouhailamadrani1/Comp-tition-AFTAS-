@@ -7,7 +7,10 @@ import com.competition.aftas.service.CompetitionService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,12 +25,20 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionDTO createCompetition(CompetitionDTO competitionDTO) {
+
+        Date date = competitionDTO.getDate();
+        if (competitionRepository.existsByDate(date)) {
+            throw new IllegalArgumentException(" already exists date");
+        }
+
+
         Competition competition = new Competition();
         BeanUtils.copyProperties(competitionDTO, competition);
         competition = competitionRepository.save(competition);
         BeanUtils.copyProperties(competition, competitionDTO);
         return competitionDTO;
     }
+
 
     @Override
     public CompetitionDTO getCompetitionById(Long id) {
@@ -69,4 +80,16 @@ public class CompetitionServiceImpl implements CompetitionService {
         BeanUtils.copyProperties(competition, competitionDTO);
         return competitionDTO;
     }
+
+    @Override
+    public CompetitionDTO getCompetitionByDate(Date date) {
+        Competition competition = competitionRepository.findByDate(date);
+        if (competition == null) {
+            return null;
+        }
+        CompetitionDTO competitionDTO = new CompetitionDTO();
+        BeanUtils.copyProperties(competition, competitionDTO);
+        return competitionDTO;
+    }
+
 }

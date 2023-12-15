@@ -28,4 +28,6 @@ public class Competition {
 
     @OneToMany(mappedBy = "id.competition")
     private Set<Ranking> rankings = new HashSet<>();
+
+
 }

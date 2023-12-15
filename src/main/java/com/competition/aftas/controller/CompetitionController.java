@@ -2,10 +2,13 @@ package com.competition.aftas.controller;
 
 import com.competition.aftas.service.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.competition.aftas.DTO.CompetitionDTO;
+
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -47,5 +50,15 @@ public class CompetitionController {
     public ResponseEntity<Void> deleteCompetition(@PathVariable Long id) {
         competitionService.deleteCompetition(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/byDate")
+    public ResponseEntity<CompetitionDTO> getCompetitionByDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        CompetitionDTO competitionDTO = competitionService.getCompetitionByDate(date);
+
+        if (competitionDTO != null) {
+            return ResponseEntity.ok(competitionDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }
