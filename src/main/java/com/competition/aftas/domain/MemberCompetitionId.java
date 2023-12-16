@@ -20,4 +20,6 @@ public class MemberCompetitionId implements Serializable {
     @ManyToOne
     @JoinColumn(name = "competition_id", referencedColumnName = "id")
     private Competition competition;
+
+
 }

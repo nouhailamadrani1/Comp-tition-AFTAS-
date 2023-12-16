@@ -1,8 +1,8 @@
 package com.competition.aftas.service.impl;
 
+import com.competition.aftas.DTO.FishDTO;
 import com.competition.aftas.DTO.LevelDTO;
 import com.competition.aftas.domain.Fish;
-import com.competition.aftas.DTO.FishDTO;
 import com.competition.aftas.domain.Level;
 import com.competition.aftas.repository.FishRepository;
 import com.competition.aftas.service.FishService;
@@ -39,9 +39,9 @@ public class FishServiceImpl implements FishService {
     }
 
     @Override
-    public FishDTO getFishById(Integer id) {
+    public Fish getFishById(Integer id) {
         Optional<Fish> optionalFish = fishRepository.findById(id);
-        return optionalFish.map(this::convertEntityToDTO).orElse(null);
+        return optionalFish.orElse(null);
     }
 
     @Override

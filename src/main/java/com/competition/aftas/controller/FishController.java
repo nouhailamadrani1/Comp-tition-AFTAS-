@@ -1,6 +1,7 @@
 package com.competition.aftas.controller;
 
 import com.competition.aftas.DTO.FishDTO;
+import com.competition.aftas.domain.Fish;
 import com.competition.aftas.service.FishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,8 @@ public class FishController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FishDTO> getFishById(@PathVariable Integer id) {
-        FishDTO fishDTO = fishService.getFishById(id);
+    public ResponseEntity<Fish> getFishById(@PathVariable Integer id) {
+        Fish fishDTO = fishService.getFishById(id);
         return ResponseEntity.ok(fishDTO);
     }
 

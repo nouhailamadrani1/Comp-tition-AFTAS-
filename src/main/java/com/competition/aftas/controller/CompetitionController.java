@@ -1,5 +1,6 @@
 package com.competition.aftas.controller;
 
+import com.competition.aftas.domain.Competition;
 import com.competition.aftas.service.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,14 +25,14 @@ public class CompetitionController {
 
     @PostMapping
     public ResponseEntity<CompetitionDTO> createCompetition(@RequestBody CompetitionDTO competitionDTO) {
-        CompetitionDTO createdCompetition = competitionService.createCompetition(competitionDTO);
+        CompetitionDTO createdCompetition = competitionService.saveCompetition(competitionDTO);
         return new ResponseEntity<>(createdCompetition, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompetitionDTO> getCompetitionById(@PathVariable Long id) {
-        CompetitionDTO competitionDTO = competitionService.getCompetitionById(id);
-        return ResponseEntity.ok(competitionDTO);
+    public ResponseEntity<Competition> getCompetitionById(@PathVariable Integer id) {
+        Competition competition = competitionService.getCompetitionById(Long.valueOf(id));
+        return ResponseEntity.ok(competition);
     }
 
     @GetMapping
@@ -51,14 +52,5 @@ public class CompetitionController {
         competitionService.deleteCompetition(id);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/byDate")
-    public ResponseEntity<CompetitionDTO> getCompetitionByDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
-        CompetitionDTO competitionDTO = competitionService.getCompetitionByDate(date);
 
-        if (competitionDTO != null) {
-            return ResponseEntity.ok(competitionDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
 }

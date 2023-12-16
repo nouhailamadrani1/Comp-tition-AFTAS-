@@ -1,8 +1,10 @@
 package com.competition.aftas.DTO;
 
 import com.competition.aftas.domain.IdentityDocumentType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.Date;
+import java.util.List;
 
 public class MemberDTO {
     private Integer num;
@@ -13,6 +15,16 @@ public class MemberDTO {
     private IdentityDocumentType identityDocument;
     private String identityNumber;
 
+
+    private List<HuntingDTO> hunts;
+
+    public List<HuntingDTO> getHunts() {
+        return hunts;
+    }
+
+    public void setHunts(List<HuntingDTO> hunts) {
+        this.hunts = hunts;
+    }
 
     public MemberDTO() {
     }

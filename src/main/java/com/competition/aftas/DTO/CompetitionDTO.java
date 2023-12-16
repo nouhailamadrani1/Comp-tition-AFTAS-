@@ -16,7 +16,6 @@ public class CompetitionDTO {
     private Integer numberOfParticipants;
     private String location;
     private Double amount;
-
     // Constructors, getters, and setters
     public Long getId() {
         return id;

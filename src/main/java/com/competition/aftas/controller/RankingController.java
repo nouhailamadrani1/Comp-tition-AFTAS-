@@ -1,11 +1,13 @@
 package com.competition.aftas.controller;
 
+import com.competition.aftas.DTO.MemberDTO;
 import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.service.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -30,6 +32,10 @@ public class RankingController {
         List<RankingDTO> rankings = rankingService.getRankingsByCompetition(competitionId);
         return ResponseEntity.ok(rankings);
     }
-
+    @GetMapping("/{competitionId}/members")
+    public ResponseEntity<List<MemberDTO>> getAllMembersByCompetition(@PathVariable Long competitionId) {
+        List<MemberDTO> members = rankingService.getAllMembersByCompetition(competitionId);
+        return ResponseEntity.ok(members);
+    }
 
 }

@@ -12,6 +12,7 @@ import java.util.Set;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer num;
 
     private String name;
@@ -20,7 +21,7 @@ public class Member {
     private String nationality;
     private IdentityDocumentType identityDocument;
     private String identityNumber;
-
-    @OneToMany(mappedBy = "id.member")
-    private Set<Ranking> rankings = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "id.member")
+//    private Set<Ranking> rankings = new HashSet<>();
 }

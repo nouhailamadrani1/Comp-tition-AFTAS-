@@ -1,5 +1,6 @@
 package com.competition.aftas.service;
 
+import com.competition.aftas.DTO.MemberDTO;
 import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.domain.Ranking;
 
@@ -10,4 +11,6 @@ public interface RankingService {
     RankingDTO createRanking(RankingDTO rankingDTO);
     List<RankingDTO> getRankingsByCompetition(Long competitionId);
     // Other methods as needed
+    List<MemberDTO> getAllMembersByCompetition(Long competitionId);
+
 }

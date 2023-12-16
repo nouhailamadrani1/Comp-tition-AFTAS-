@@ -1,6 +1,7 @@
 package com.competition.aftas.controller;
 
 import com.competition.aftas.DTO.MemberDTO;
+import com.competition.aftas.domain.Member;
 import com.competition.aftas.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,33 +20,28 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping
-    public ResponseEntity<MemberDTO> createMember(@RequestBody MemberDTO memberDTO) {
-        MemberDTO createdMember = memberService.createMember(memberDTO);
-        return new ResponseEntity<>(createdMember, HttpStatus.CREATED);
-    }
-
     @GetMapping("/{num}")
-    public ResponseEntity<MemberDTO> getMemberById(@PathVariable Integer num) {
-        MemberDTO memberDTO = memberService.getMemberById(num);
-        return ResponseEntity.ok(memberDTO);
+    public Member getMember(@PathVariable Integer num) {
+        return memberService.getMemberById(num);
     }
 
     @GetMapping
-    public ResponseEntity<List<MemberDTO>> getAllMembers() {
-        List<MemberDTO> members = memberService.getAllMembers();
-        return ResponseEntity.ok(members);
+    public List<MemberDTO> getAllMembers() {
+        return memberService.getAllMembers();
+    }
+
+    @PostMapping
+    public MemberDTO createMember(@RequestBody MemberDTO memberDTO) {
+        return memberService.saveMember(memberDTO);
     }
 
     @PutMapping("/{num}")
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer num, @RequestBody MemberDTO memberDTO) {
-        MemberDTO updatedMember = memberService.updateMember(num, memberDTO);
-        return ResponseEntity.ok(updatedMember);
+    public MemberDTO updateMember(@PathVariable Integer num, @RequestBody MemberDTO updatedMemberDTO) {
+        return memberService.updateMember(num, updatedMemberDTO);
     }
 
     @DeleteMapping("/{num}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Integer num) {
+    public void deleteMember(@PathVariable Integer num) {
         memberService.deleteMember(num);
-        return ResponseEntity.noContent().build();
     }
 }

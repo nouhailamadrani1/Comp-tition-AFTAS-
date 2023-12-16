@@ -7,55 +7,53 @@ import com.competition.aftas.service.MemberService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepository;
-
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    private MemberRepository memberRepository;
 
     @Override
-    public MemberDTO createMember(MemberDTO memberDTO) {
+    public MemberDTO saveMember(MemberDTO memberDTO) {
         Member member = new Member();
         BeanUtils.copyProperties(memberDTO, member);
-        memberRepository.save(member);
+
+        Member savedMember = memberRepository.save(member);
+        BeanUtils.copyProperties(savedMember, memberDTO);
         return memberDTO;
     }
 
     @Override
-    public MemberDTO getMemberById(Integer num) {
-        Member member = memberRepository.findById(num)
-                .orElseThrow(() -> new RuntimeException("Member not found with num: " + num));
-
-        MemberDTO memberDTO = new MemberDTO();
-        BeanUtils.copyProperties(member, memberDTO);
-        return memberDTO;
+    public Member getMemberById(Integer id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        return optionalMember.orElse(null);
     }
+
 
     @Override
     public List<MemberDTO> getAllMembers() {
-        List<Member> members = memberRepository.findAll();
-        return members.stream()
+        List<Member> memberList = memberRepository.findAll();
+        return memberList.stream()
                 .map(this::convertEntityToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MemberDTO updateMember(Integer num, MemberDTO memberDTO) {
-        Member existingMember = memberRepository.findById(num)
-                .orElseThrow(() -> new RuntimeException("Member not found with num: " + num));
-
-        BeanUtils.copyProperties(memberDTO, existingMember);
-        existingMember = memberRepository.save(existingMember);
-
-        BeanUtils.copyProperties(existingMember, memberDTO);
-        return memberDTO;
+    public MemberDTO updateMember(Integer num, MemberDTO updatedMemberDTO) {
+        Optional<Member> optionalMember = memberRepository.findById(num);
+        if (optionalMember.isPresent()) {
+            Member existingMember = optionalMember.get();
+            BeanUtils.copyProperties(updatedMemberDTO, existingMember);
+            Member updatedMember = memberRepository.save(existingMember);
+            BeanUtils.copyProperties(updatedMember, updatedMemberDTO);
+            return updatedMemberDTO;
+        }
+        return null;
     }
 
     @Override

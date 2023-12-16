@@ -1,28 +1,27 @@
 package com.competition.aftas.DTO;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
+import java.util.Optional;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class HuntingDTO {
     private Integer id;
     private Integer numberOfFish;
-    private Integer competitionId;
-    private Integer memberNum;
+    private Integer competitionId; // Change to Integer
+    private Integer memberNum; // Change to Integer
     private Integer fishId;
 
-
-
-
-    public HuntingDTO() {
-    }
-
-
-    public HuntingDTO(Integer id, Integer numberOfFish, Integer competitionId, Integer memberNum, Integer fishId) {
-        this.id = id;
-        this.numberOfFish = numberOfFish;
-        this.competitionId = competitionId;
-        this.memberNum = memberNum;
-        this.fishId = fishId;
-    }
+    private MemberDTO member;
+    private CompetitionDTO competition;
+    private FishDTO fish;
 
     public Integer getId() {
         return id;
@@ -63,4 +62,30 @@ public class HuntingDTO {
     public void setFishId(Integer fishId) {
         this.fishId = fishId;
     }
+
+    public MemberDTO getMember() {
+        return member;
+    }
+
+    public void setMember(MemberDTO member) {
+        this.member = member;
+    }
+
+    public CompetitionDTO getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(CompetitionDTO competition) {
+        this.competition = competition;
+    }
+
+    public FishDTO getFish() {
+        return fish;
+    }
+
+    public void setFish(FishDTO fish) {
+        this.fish = fish;
+    }
+
+
 }

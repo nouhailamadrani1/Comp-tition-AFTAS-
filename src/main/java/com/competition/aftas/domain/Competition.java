@@ -26,8 +26,8 @@ public class Competition {
     private String location;
     private Double amount;
 
-    @OneToMany(mappedBy = "id.competition")
-    private Set<Ranking> rankings = new HashSet<>();
+//    @OneToMany(mappedBy = "id.competition")
+//    private Set<Ranking> rankings = new HashSet<>();
 
 
 }

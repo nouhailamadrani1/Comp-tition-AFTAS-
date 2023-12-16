@@ -8,10 +8,13 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Builder
+@Table(name = "ranking")
 public class Ranking {
     @EmbeddedId
     private MemberCompetitionId id;
 
     private Integer rank;
     private int score;
+
 }
