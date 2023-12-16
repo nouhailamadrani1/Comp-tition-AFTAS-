@@ -4,10 +4,12 @@ import com.competition.aftas.DTO.MemberDTO;
 import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.service.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -36,6 +38,14 @@ public class RankingController {
     public ResponseEntity<List<MemberDTO>> getAllMembersByCompetition(@PathVariable Long competitionId) {
         List<MemberDTO> members = rankingService.getAllMembersByCompetition(competitionId);
         return ResponseEntity.ok(members);
+    }
+
+    @GetMapping("/competition/{competitionId}/date/{date}")
+    public ResponseEntity<List<RankingDTO>> getRankingsForCompetitionOnDate(
+            @PathVariable Long competitionId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<RankingDTO> rankings = rankingService.getRankingsForCompetitionOnDate(competitionId, date);
+        return new ResponseEntity<>(rankings, HttpStatus.OK);
     }
 
 }

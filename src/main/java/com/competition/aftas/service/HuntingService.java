@@ -1,6 +1,7 @@
 package com.competition.aftas.service;
 
 import com.competition.aftas.DTO.HuntingDTO;
+import com.competition.aftas.domain.Competition;
 import com.competition.aftas.domain.Hunting;
 
 import java.util.List;
@@ -12,5 +13,7 @@ public interface HuntingService {
     HuntingDTO createHunting(HuntingDTO huntingDTO);
     HuntingDTO updateHunting(Integer id, HuntingDTO updatedHuntingDTO);
     void deleteHunting(Integer id);
+
+    void calculateAndAssignScores(Competition competition);
 
 }

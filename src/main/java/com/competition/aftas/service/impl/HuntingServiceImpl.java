@@ -1,26 +1,28 @@
 package com.competition.aftas.service.impl;
 
 import com.competition.aftas.DTO.HuntingDTO;
+import com.competition.aftas.DTO.RankingDTO;
 import com.competition.aftas.domain.Competition;
 import com.competition.aftas.domain.Fish;
 import com.competition.aftas.domain.Hunting;
 import com.competition.aftas.domain.Member;
 import com.competition.aftas.repository.HuntingRepository;
-import com.competition.aftas.service.CompetitionService;
-import com.competition.aftas.service.FishService;
-import com.competition.aftas.service.HuntingService;
-import com.competition.aftas.service.MemberService;
+import com.competition.aftas.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class HuntingServiceImpl implements HuntingService {
 
+    @Autowired
+    private RankingService rankingService;
     private final HuntingRepository huntingRepository;
     private final CompetitionService competitionService;
     private final FishService fishService;
@@ -123,6 +125,36 @@ public HuntingDTO createHunting(HuntingDTO huntingDTO) {
 
         return hunting;
     }
+@Override
+    public void calculateAndAssignScores(Competition competition) {
+        List<Hunting> huntingEntries = huntingRepository.findByCompetition(competition);
 
+        Map<Member, Integer> memberScores = new HashMap<>();
 
+        // Calculate the score for each member
+        for (Hunting hunting : huntingEntries) {
+            Member member = hunting.getMember();
+            Fish fish = hunting.getFish();
+
+            if (member != null && fish != null) {
+                int fishPoints = fish.getLevel().getPoints();
+                int scoreToAdd = fishPoints * hunting.getNumberOfFish();
+
+                memberScores.put(member, memberScores.getOrDefault(member, 0) + scoreToAdd);
+            }
+        }
+
+        // Update the scores in the rankings
+        memberScores.forEach((member, score) -> {
+            RankingDTO rankingDTO = new RankingDTO();
+            rankingDTO.setMemberId(Long.valueOf(member.getNum()));
+            rankingDTO.setCompetitionId(competition.getId());
+            rankingDTO.setScore(score);
+
+            rankingService.updateScore(rankingDTO);
+        });
+    }
 }
+
+
+

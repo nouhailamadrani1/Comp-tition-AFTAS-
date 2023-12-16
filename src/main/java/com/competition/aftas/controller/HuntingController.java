@@ -1,7 +1,9 @@
 package com.competition.aftas.controller;
 
 import com.competition.aftas.DTO.HuntingDTO;
+import com.competition.aftas.domain.Competition;
 import com.competition.aftas.domain.Hunting;
+import com.competition.aftas.service.CompetitionService;
 import com.competition.aftas.service.HuntingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +18,13 @@ import java.util.Optional;
 public class HuntingController {
 
     private final HuntingService huntingService;
+    private final CompetitionService competitionService; // Add this line
 
     @Autowired
-    public HuntingController(HuntingService huntingService) {
+    public HuntingController(HuntingService huntingService, CompetitionService competitionService) {
         this.huntingService = huntingService;
+        this.competitionService = competitionService; // Add this line
     }
-
     @GetMapping("/{id}")
     public HuntingDTO getHunting(@PathVariable Integer id) {
         return huntingService.getHuntingById(id);
@@ -48,4 +51,21 @@ public class HuntingController {
     }
 
 
+    @PostMapping("/calculate-scores/{competitionId}")
+    public ResponseEntity<String> calculateAndAssignScores(@PathVariable Long competitionId) {
+        try {
+
+            Competition competition = competitionService.getCompetitionById(competitionId);
+
+            if (competition != null) {
+
+                huntingService.calculateAndAssignScores(competition);
+                return ResponseEntity.ok("Scores calculated and assigned successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Competition not found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error calculating scores: " + e.getMessage());
+        }
+    }
 }

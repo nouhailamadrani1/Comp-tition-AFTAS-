@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,5 +98,27 @@ public class RankingServiceImpl implements RankingService {
         memberDTO.setName(member.getName());
         // Add other fields as needed
         return memberDTO;
+    }
+    @Override
+    public void updateScore(RankingDTO rankingDTO) {
+        MemberCompetitionId id = new MemberCompetitionId();
+        id.setMember(memberRepository.findById(Math.toIntExact(rankingDTO.getMemberId())).orElse(null));
+        id.setCompetition(competitionRepository.findById(rankingDTO.getCompetitionId()).orElse(null));
+
+        Ranking ranking = rankingRepository.findById(id).orElse(null);
+
+        if (ranking != null) {
+            ranking.setScore(rankingDTO.getScore());
+            rankingRepository.save(ranking);
+        }
+    }
+    @Override
+    public List<RankingDTO> getRankingsForCompetitionOnDate(Long competitionId, LocalDate date) {
+        List<Ranking> rankings = rankingRepository.findById_Competition_IdAndId_Competition_DateOrderByScoreDescRankAsc(competitionId, date);
+
+        // Convert Ranking entities to DTOs
+        return rankings.stream()
+                .map(this::convertEntityToDTO)
+                .collect(Collectors.toList());
     }
 }
