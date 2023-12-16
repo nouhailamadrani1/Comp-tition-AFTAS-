@@ -15,6 +15,7 @@ public interface RankingRepository extends JpaRepository<Ranking, MemberCompetit
     List<Ranking> findByIdCompetitionId(Long competitionId);
     @Query("SELECT DISTINCT r.id.member FROM Ranking r WHERE r.id.competition.id = :competitionId")
     List<Member> findMembersByCompetitionId(@Param("competitionId") Long competitionId);
-    List<Ranking> findById_Competition_IdAndId_Competition_DateOrderByScoreDescRankAsc(
+
+    List<Ranking> findTop3ById_Competition_IdAndId_Competition_DateOrderByScoreDesc(
             Long competitionId, LocalDate date);
 }

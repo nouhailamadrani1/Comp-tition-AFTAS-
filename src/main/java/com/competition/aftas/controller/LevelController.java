@@ -18,19 +18,16 @@ public class LevelController {
     public LevelController(LevelService levelService) {
         this.levelService = levelService;
     }
-
     @PostMapping
     public ResponseEntity<LevelDTO> createLevel(@RequestBody LevelDTO levelDTO) {
         LevelDTO createdLevel = levelService.createLevel(levelDTO);
         return new ResponseEntity<>(createdLevel, HttpStatus.CREATED);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<LevelDTO> getLevelById(@PathVariable Integer id) {
         LevelDTO levelDTO = levelService.getLevelById(id);
         return ResponseEntity.ok(levelDTO);
     }
-
     @GetMapping
     public ResponseEntity<List<LevelDTO>> getAllLevels() {
         List<LevelDTO> levels = levelService.getAllLevels();

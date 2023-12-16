@@ -16,5 +16,6 @@ public interface RankingService {
     List<MemberDTO> getAllMembersByCompetition(Long competitionId);
 
     void updateScore(RankingDTO rankingDTO);
-    List<RankingDTO> getRankingsForCompetitionOnDate(Long competitionId, LocalDate date);
+
+
 }

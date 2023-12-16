@@ -40,12 +40,4 @@ public class RankingController {
         return ResponseEntity.ok(members);
     }
 
-    @GetMapping("/competition/{competitionId}/date/{date}")
-    public ResponseEntity<List<RankingDTO>> getRankingsForCompetitionOnDate(
-            @PathVariable Long competitionId,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<RankingDTO> rankings = rankingService.getRankingsForCompetitionOnDate(competitionId, date);
-        return new ResponseEntity<>(rankings, HttpStatus.OK);
-    }
-
 }

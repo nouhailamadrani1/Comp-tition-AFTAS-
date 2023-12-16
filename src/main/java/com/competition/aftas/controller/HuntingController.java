@@ -18,12 +18,12 @@ import java.util.Optional;
 public class HuntingController {
 
     private final HuntingService huntingService;
-    private final CompetitionService competitionService; // Add this line
+    private final CompetitionService competitionService;
 
     @Autowired
     public HuntingController(HuntingService huntingService, CompetitionService competitionService) {
         this.huntingService = huntingService;
-        this.competitionService = competitionService; // Add this line
+        this.competitionService = competitionService;
     }
     @GetMapping("/{id}")
     public HuntingDTO getHunting(@PathVariable Integer id) {
