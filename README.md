@@ -31,7 +31,7 @@ Before you begin, ensure you have the following installed:
 
 2. **Navigate to the project directory:**
     ```bash
-    cd aftas-backend
+    cd Comp-tition-AFTAS-
     ```
 
 3. **Build the project:**
