@@ -1,5 +1,4 @@
 package com.competition.aftas.service.impl;
-
 import com.competition.aftas.DTO.LevelDTO;
 import com.competition.aftas.domain.Level;
 import com.competition.aftas.repository.LevelRepository;
@@ -32,7 +31,6 @@ public class LevelServiceImpl implements LevelService {
     public LevelDTO getLevelById(Integer id) {
         Level level = levelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Level not found with id: " + id));
-
         LevelDTO levelDTO = new LevelDTO();
         BeanUtils.copyProperties(level, levelDTO);
         return levelDTO;
@@ -50,10 +48,8 @@ public class LevelServiceImpl implements LevelService {
     public LevelDTO updateLevel(Integer id, LevelDTO levelDTO) {
         Level existingLevel = levelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Level not found with id: " + id));
-
         BeanUtils.copyProperties(levelDTO, existingLevel);
         existingLevel = levelRepository.save(existingLevel);
-
         BeanUtils.copyProperties(existingLevel, levelDTO);
         return levelDTO;
     }

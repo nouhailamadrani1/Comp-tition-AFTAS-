@@ -1,15 +1,17 @@
 package com.competition.aftas.controller;
-
 import com.competition.aftas.domain.Competition;
 import com.competition.aftas.service.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.competition.aftas.DTO.CompetitionDTO;
 
-import java.util.Date;
+
 import java.util.List;
 
 @RestController
@@ -41,10 +43,14 @@ public class CompetitionController {
         return ResponseEntity.ok(competitions);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CompetitionDTO> updateCompetition(@PathVariable Long id, @RequestBody CompetitionDTO competitionDTO) {
-        CompetitionDTO updatedCompetition = competitionService.updateCompetition(id, competitionDTO);
-        return ResponseEntity.ok(updatedCompetition);
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<CompetitionDTO>> getAllCompetitionsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CompetitionDTO> competitions = competitionService.getAllCompetitions(pageable);
+        return ResponseEntity.ok(competitions);
     }
 
     @DeleteMapping("/{id}")

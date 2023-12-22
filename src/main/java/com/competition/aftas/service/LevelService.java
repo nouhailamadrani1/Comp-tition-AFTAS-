@@ -1,10 +1,8 @@
 package com.competition.aftas.service;
-
 import com.competition.aftas.DTO.LevelDTO;
-import com.competition.aftas.domain.Level;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
-
+@Service
 public interface LevelService {
     LevelDTO createLevel(LevelDTO levelDTO);
     LevelDTO getLevelById(Integer id);

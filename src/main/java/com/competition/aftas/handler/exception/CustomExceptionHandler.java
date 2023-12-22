@@ -1,26 +1,20 @@
 package com.competition.aftas.handler.exception;
-
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, List<String>> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.groupingBy(FieldError::getField, Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())));
-
-        return ResponseEntity.badRequest().body(errors);
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<Map<String, String>> handleException(Throwable th){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "error");
+        error.put("message", th.getMessage());
+        return ResponseEntity.badRequest().body(error);
     }
+
 }

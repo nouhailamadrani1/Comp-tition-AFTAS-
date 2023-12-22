@@ -1,18 +1,16 @@
 package com.competition.aftas;
-
 import com.competition.aftas.domain.Fish;
 import com.competition.aftas.domain.Level;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 @SpringBootApplication
+
 public class AftasApplication {
 
 	public static void main(String[] args) {
@@ -21,17 +19,17 @@ public class AftasApplication {
 
 //	@Bean
 //	public CommandLineRunner loadData(EntityManagerFactory emf) {
-////		return args -> {
-////			EntityManager em = emf.createEntityManager();
-////
-////			try {
-////				loadSampleData(em);
-////			} finally {
-////				em.close();
-////			}
-////		};
+//		return args -> {
+//			EntityManager em = emf.createEntityManager();
+//
+//			try {
+//				loadSampleData(em);
+//			} finally {
+//				em.close();
+//			}
+//		};
 //	}
-
+//
 //	public static void loadSampleData(EntityManager entityManager) {
 //		entityManager.getTransaction().begin();
 //

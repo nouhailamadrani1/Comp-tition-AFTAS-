@@ -13,7 +13,6 @@ import com.competition.aftas.service.RankingService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +20,8 @@ import java.util.stream.Collectors;
 public class RankingServiceImpl implements RankingService {
 
     private final RankingRepository rankingRepository;
-    private final MemberRepository memberRepository; // Added MemberRepository
-    private final CompetitionRepository competitionRepository; // Added CompetitionRepository
+    private final MemberRepository memberRepository;
+    private final CompetitionRepository competitionRepository;
 
     @Autowired
     public RankingServiceImpl(
@@ -37,41 +36,29 @@ public class RankingServiceImpl implements RankingService {
     @Override
     public RankingDTO createRanking(RankingDTO rankingDTO) {
         MemberCompetitionId memberCompetitionId = new MemberCompetitionId();
-
-        // Assuming you have a MemberRepository and CompetitionRepository to fetch entities
         Member member = memberRepository.findById(Math.toIntExact(rankingDTO.getMemberId()))
                 .orElseThrow(() -> new RuntimeException("Member not found"));
         Competition competition = competitionRepository.findById(rankingDTO.getCompetitionId())
                 .orElseThrow(() -> new RuntimeException("Competition not found"));
-
         memberCompetitionId.setMember(member);
         memberCompetitionId.setCompetition(competition);
-
-        // Set initial score and rank to 0
         Ranking ranking = Ranking.builder()
                 .id(memberCompetitionId)
                 .score(0)
                 .rank(0)
                 .build();
-
-        // Save the ranking
         Ranking savedRanking = rankingRepository.save(ranking);
 
-        // Convert and return the saved ranking as DTO
         return convertEntityToDTO(savedRanking);
     }
 
     @Override
     public List<RankingDTO> getRankingsByCompetition(Long competitionId) {
         List<Ranking> rankings = rankingRepository.findByIdCompetitionId(competitionId);
-
-        // Convert and return the list of rankings as DTOs
         return rankings.stream()
                 .map(this::convertEntityToDTO)
                 .collect(Collectors.toList());
     }
-
-    // Other methods...
 
     private RankingDTO convertEntityToDTO(Ranking ranking) {
         RankingDTO rankingDTO = new RankingDTO();
@@ -80,22 +67,21 @@ public class RankingServiceImpl implements RankingService {
         rankingDTO.setCompetitionId(ranking.getId().getCompetition().getId());
         return rankingDTO;
     }
-
     @Override
     public List<MemberDTO> getAllMembersByCompetition(Long competitionId) {
         List<Member> members = rankingRepository.findMembersByCompetitionId(competitionId);
 
-        // Convert and return the list of members as DTOs
         return members.stream()
                 .map(this::convertMemberEntityToDTO)
                 .collect(Collectors.toList());
     }
     private MemberDTO convertMemberEntityToDTO(Member member) {
         MemberDTO memberDTO = new MemberDTO();
-        // Map member entity fields to DTO fields as needed
+
         memberDTO.setNum(member.getNum());
         memberDTO.setName(member.getName());
-        // Add other fields as needed
+        memberDTO.setName(member.getFamilyName());
+        memberDTO.setName(member.getName());
         return memberDTO;
     }
     @Override
@@ -103,7 +89,6 @@ public class RankingServiceImpl implements RankingService {
         MemberCompetitionId id = new MemberCompetitionId();
         id.setMember(memberRepository.findById(Math.toIntExact(rankingDTO.getMemberId())).orElse(null));
         id.setCompetition(competitionRepository.findById(rankingDTO.getCompetitionId()).orElse(null));
-
         Ranking ranking = rankingRepository.findById(id).orElse(null);
 
         if (ranking != null) {
